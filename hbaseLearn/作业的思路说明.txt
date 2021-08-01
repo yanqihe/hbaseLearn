@@ -1,0 +1,36 @@
+获取hbase连接
+1，找到hbase使用的zookeeper主机名和端口号；
+2，根据步聚1的配置，使用ConnectionFactory创建Connection对象；
+
+创建自定义namespace的表（可重复执行）
+1，从Connection对象获取Admin对象；
+2，判断heyanqi:student是否已创建；
+3，如果名称为"heyanqi"的namespace没有创建，则先创建；
+4，使用TableDescriptorBuilder配置表结构(包含添加列族)；
+5，使用admin.createTable执行创建；
+
+插入指定的行
+1，从Connection对象获取Table对象；
+2，设计rowKey（本作业使用student.name作为rowKey）；
+   a，满足唯一性；
+   b，使数据均衡分布在各个Region中；
+   c，方便使用rowKey进行range查询；
+   d，长度适中，使用的内存可接授；
+3，创建Put对象，且设置它的rowKey和Column中的Cell对象；
+4，Cell对象的值使用：列族、列标识和时间戳(如果没有设置，则使用默认的时间戳)来标识；
+5，使用table的put方法执行一行数据的插入；
+
+删除数据
+1，从Connection对象获取Table对象；
+2，创建Delete对象且设置rowKey
+3，根据不同的粒度执行删除
+   a，删除整行时，只需要指定rowKey; 
+   b，删除行的某个列族(可以指定删除时间戳小于或等于指定时间戳的指定族的所有列)；
+   c，删除行的某个列族的某个列的Cell（可以删除指定列的指定版本）；
+4，使用table的delete方法执行删除；
+
+过滤查询
+1，从Connection对象获取Table对象；
+2，创建Scan对象；
+3，为Scan对象设置Filter对象（类以sql的where子句）；
+4，使用table对象的getScanner方法执行扫描; 

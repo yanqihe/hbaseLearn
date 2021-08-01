@@ -1,0 +1,3 @@
+main方法类：com.heyq.hadoop.hbaseLearn.App;
+
+hbase配置说明：连接是的公有云的学习环境，如果在本地运行需要在hosts文件中配置域名对应的公网ip
